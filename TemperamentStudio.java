@@ -272,11 +272,15 @@ public class TemperamentStudio extends JFrame {
 	public static TuningSchemes tuningSchemes; // accessed by RetuneMIDI
 	private static JSlider jTempo;
 	private static JMeantoneSlider jMeantoneSlider;
+	private static JPanel manualTuningRowPanel;
 	private static JPanel manualTuningSuperPanel;
 	private static ManualTuningPanel manualTuningPanel;
 	private static JManualTuningSlider jManualTuningSliderOne;
 	private static JManualTuningSlider jManualTuningSliderTwo;
 	private static JManualTuningSlider jManualTuningSliderThree;
+	private static ManualTuningRatios manualTuningRatioMaj3;
+	private static ManualTuningRatios manualTuningRatioMaj5;
+	private static ManualTuningRatios manualTuningRatioMin3;
 	private static JSlider[] jHarmonicsSliders;
 	private static JPanel jMeantoneSliderPanel;
 	private static JPanel jManualTuningSliderPanel;
@@ -781,13 +785,12 @@ public class TemperamentStudio extends JFrame {
 		synth.open();
 		kbPanel = new KeyboardPanel(synth, frame);
 
-		
-		manualTuningSuperPanel = new JPanel(new FlowLayout());
-		manualTuningPanel = new ManualTuningPanel();
-		JPanel manualTuningRowPanel = new JPanel();
-		manualTuningRowPanel.setLayout(new BoxLayout(manualTuningRowPanel,BoxLayout.X_AXIS));
-		manualTuningRowPanel.add(manualTuningSuperPanel);
-		contentPane.add(manualTuningRowPanel);
+//		manualTuningSuperPanel = new JPanel(new FlowLayout());
+//		manualTuningPanel = new ManualTuningPanel();
+//		JPanel manualTuningRowPanel = new JPanel();
+//		manualTuningRowPanel.setLayout(new BoxLayout(manualTuningRowPanel,BoxLayout.X_AXIS));
+//		manualTuningRowPanel.add(manualTuningSuperPanel);
+//		contentPane.add(manualTuningRowPanel, 0);
 
 		/////////////////////////////////////////////////// add items to panels
 		contentPane.add(topPanel);
@@ -875,6 +878,19 @@ public class TemperamentStudio extends JFrame {
 
 
 		contentPane.add(jFileRowPanel);
+		
+		manualTuningSuperPanel = new JPanel(new FlowLayout());
+		manualTuningRatioMaj3 = new ManualTuningRatios("Major 3");
+		manualTuningRatioMaj5 = new ManualTuningRatios("Major 5");
+		manualTuningRatioMin3 = new ManualTuningRatios("Minor 3");
+		manualTuningPanel = new ManualTuningPanel();
+		manualTuningSuperPanel.add(manualTuningRatioMaj3);
+		manualTuningSuperPanel.add(manualTuningRatioMaj5);
+		manualTuningSuperPanel.add(manualTuningRatioMin3);
+		manualTuningSuperPanel.add(manualTuningPanel);
+		manualTuningRowPanel = new JPanel();
+		manualTuningRowPanel.setLayout(new BoxLayout(manualTuningRowPanel,BoxLayout.X_AXIS));
+		contentPane.add(manualTuningRowPanel);
 
 		// This panel has the musical keyboard as well as sub-panels to
 		// add intervals, transpose notes, etc.
@@ -1305,19 +1321,21 @@ public class TemperamentStudio extends JFrame {
 					if(jTunings.getSelectedItem().equals(gMeantoneName)){
 //						jTuningSchemePanel.remove(jManualTuningSliderPanel);
 //						manualTuningPanel.cloak();
-						manualTuningSuperPanel.remove(manualTuningPanel);
+						manualTuningRowPanel.remove(manualTuningSuperPanel);
 						frame.pack();
 						frame.repaint();
 						jTuningSchemePanel.remove(jEditIntonationsPanel);
-						jMeantoneSliderPanel.setPreferredSize( jEditIntonationsPanel.getSize());
-						jMeantoneSliderPanel.setMinimumSize( jEditIntonationsPanel.getSize());
+						jMeantoneSliderPanel.setPreferredSize(new Dimension(300, 150));
+						jMeantoneSliderPanel.setMinimumSize(new Dimension(300, 150));
 						jTuningSchemePanel.add(jMeantoneSliderPanel,2);
 						//jMeantoneSliderPanel.setVisible(true);
 						//jEditIntonationsPanel.setVisible(false);
 					} else if (jTunings.getSelectedItem().equals(manualTuningName)) {
 						jTuningSchemePanel.remove(jEditIntonationsPanel);
 						jTuningSchemePanel.remove(jMeantoneSliderPanel);
-						manualTuningSuperPanel.add(manualTuningPanel);
+//						manualTuningPanel.setPreferredSize(new Dimension(600, 150));
+//						manualTuningPanel.setMinimumSize(new Dimension(600, 150));
+						manualTuningRowPanel.add(manualTuningSuperPanel);
 						frame.pack();
 						frame.repaint();
 //						jManualTuningSliderPanel.setPreferredSize( jEditIntonationsPanel.getSize());
@@ -1330,7 +1348,7 @@ public class TemperamentStudio extends JFrame {
 					else{
 //						jTuningSchemePanel.remove(jManualTuningSliderPanel);
 //						manualTuningPanel.cloak();
-						manualTuningSuperPanel.remove(manualTuningPanel);
+						manualTuningRowPanel.remove(manualTuningSuperPanel);
 						frame.pack();
 						frame.repaint();
 						jTuningSchemePanel.remove(jMeantoneSliderPanel);
@@ -1426,12 +1444,16 @@ public class TemperamentStudio extends JFrame {
 			jManualTuningSliderOneX = new JLabel();
 			jManualTuningSliderTwoX = new JLabel();
 			jManualTuningSliderThreeX = new JLabel();
+			jManualTuningSliderOneX.setPreferredSize(new Dimension(150, 30));
+			jManualTuningSliderTwoX.setPreferredSize(new Dimension(150, 30));
+			jManualTuningSliderThreeX.setPreferredSize(new Dimension(150, 30));
+
 			
 			jManualTuningSliderOne = new JManualTuningSlider(0);
 			jManualTuningSliderTwo = new JManualTuningSlider(1);
 			jManualTuningSliderThree = new JManualTuningSlider(2);
 
-			jManualTuningSliderPanel.setBorder(sectionBorder);
+//			jManualTuningSliderPanel.setBorder(sectionBorder);
 			jManualTuningSliderPanel.add(jManualTuningSliderOne);
 
 			jManualTuningSliderPanel.add(jManualTuningSliderTwo);
@@ -1455,7 +1477,15 @@ public class TemperamentStudio extends JFrame {
 			mt.gridx = 1;
 			mt.gridy = 2;
 			jManualTuningSliderPanel.add(jManualTuningSliderThreeX, mt);
+			
+//			jManualTuningSliderPanel.setPreferredSize(new Dimension(1000, 150));
+//			jManualTuningSliderPanel.setMinimumSize(new Dimension(1000, 150));
+			
 			this.add(jManualTuningSliderPanel);
+			
+//			this.setPreferredSize(new Dimension(1200, 150));
+//			this.setMinimumSize(new Dimension(1200, 150));
+			
 		}
 	}
 
@@ -2644,13 +2674,13 @@ public class TemperamentStudio extends JFrame {
 	}
 
 	private static class JManualTuningSlider extends JToneSlider{
-		// Slider num : Sliders 1, 2, and 3, corresponding to Top, Middle, Bottom
+		// Slider num : Sliders 0, 1, and 2, corresponding to Top, Middle, Bottom
 		// Slider 1 (top): pitchbends channels corresponding to G, G#, and A (a 5th up form C, C#, and D)
 		// Slider 2 (middle): pitchbends channels corresponding to E, F, and F# (a major 3rd up form C, C#, and D)
 		// Slider 3 (bottom): pitchbends channels corresponding to C, C#, and D (bottom 3 notes)
 		public int sliderNum;
 		JManualTuningSlider(final int sliderNum) {
-			super(-100.0, 100.0, 0);
+			super(-50.0, 50.0, 0);
 			this.sliderNum = sliderNum;
 			if (sliderNum == 0) {
 				jManualTuningSliderOneX.setText(new DecimalFormat("000.00000").format(getValue()));
@@ -2660,33 +2690,60 @@ public class TemperamentStudio extends JFrame {
 				jManualTuningSliderThreeX.setText(new DecimalFormat("000.00000").format(getValue()));
 			} else
 				System.out.println("slider error");
+				changeRatios();
 			addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e){
-					double x = 0;
-
+					double x = jManualTuningSliderOne.getValue()/(double)toneMult;
+					double y = jManualTuningSliderTwo.getValue()/(double)toneMult;
+					double z = jManualTuningSliderThree.getValue()/(double)toneMult;
 					if (sliderNum == 0) {
 						jManualTuningSliderOneX.setText(new DecimalFormat("#00.00000").format(getValue()/(1.0*toneMult)));
-						x = jManualTuningSliderOne.getValue()/(double)toneMult;
-					}
+						tuningSchemes.changeManualTuningScheme(manualTuningName, x, 0);					}
 					else if (sliderNum == 1) {
 						jManualTuningSliderTwoX.setText(new DecimalFormat("#00.00000").format(getValue()/(1.0*toneMult)));
-						x = jManualTuningSliderTwo.getValue()/(double)toneMult;
+						tuningSchemes.changeManualTuningScheme(manualTuningName, y, 1);
 					}
 					else if (sliderNum == 2) {
 						jManualTuningSliderThreeX.setText(new DecimalFormat("#00.00000").format(getValue()/(1.0*toneMult)));
-						x = jManualTuningSliderThree.getValue()/(double)toneMult;
+						tuningSchemes.changeManualTuningScheme(manualTuningName, z, 2);
 					} else {
 						System.out.println("slider error");
 					}
+
 					System.out.println(x);
-					tuningSchemes.changeManualTuningScheme(manualTuningName, x, sliderNum);
-//					changeManualTuning(sliderNum);
 					changeLiveTuning();
+					changeRatios();
 				}
 			});
 			
 			addFocusListener(blockKeysFocusListener);
-			setMinimumSize(new Dimension(150,30));
+			setPreferredSize(new Dimension(600,30));
+			setMinimumSize(new Dimension(600,30));
+		}
+		
+		private void changeRatios() {
+			Double[] frequencies = tuningSchemes.getFrequencies(manualTuningName, jTuningAdvancedPanel.getRootNote(), jTuningAdvancedPanel.getFrequency());
+			manualTuningRatioMaj3.setRatioText(Math.log((frequencies[4]/frequencies[0])/(5.0/4))/Math.log(2));
+			manualTuningRatioMaj5.setRatioText(Math.log((frequencies[7]/frequencies[0])/(3.0/2))/Math.log(2));
+			manualTuningRatioMin3.setRatioText(Math.log((frequencies[7]/frequencies[4])/(6.0/5))/Math.log(2));
+		}
+	}
+	
+	public static class ManualTuningRatios extends JPanel {
+		private JLabel diffLabel;
+		private JLabel ratioLabel;
+		ManualTuningRatios(String label) {
+			this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+			diffLabel = new JLabel(label);
+			ratioLabel = new JLabel("0.00");
+			this.add(diffLabel);
+			this.add(ratioLabel);
+			this.setPreferredSize(new Dimension(100, 50));
+			this.setMinimumSize(new Dimension(100, 50));
+		}
+		
+		public void setRatioText(double ratio) {
+			ratioLabel.setText(new DecimalFormat("#0.000000").format(ratio));
 		}
 	}
 

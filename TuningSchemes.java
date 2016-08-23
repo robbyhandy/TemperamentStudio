@@ -236,11 +236,12 @@ public class TuningSchemes {
 	}
 
 	public Double[] getFrequencies(String tuningscheme, int tuningnote, double tuningfreq){
+		System.out.println("TuningNote" + tuningnote);
 		Double[] pitchratios = getRatios(tuningscheme);
 		Double[] freqs = new Double[12];
-		freqs[0] = tuningfreq/pitchratios[tuningnote];
-		for(int i=1; i < 12; i++){
-			freqs[i] = freqs[0]*pitchratios[i];
+		Double refFreq = tuningfreq/pitchratios[tuningnote];
+		for(int i=0; i < 12; i++){
+			freqs[i] = refFreq*pitchratios[i];
 		}
 		return(freqs);
 	}

@@ -2608,7 +2608,7 @@ public class TemperamentStudio extends JFrame {
 	}
 
 	public static class JToneSlider extends JSlider{
-		static final int toneMult = 30000;
+		static final int toneMult = 300000;
 
 		JToneSlider() {
 			this(1.4905, 1.505, (int)Math.round(Math.pow(5,0.25)*toneMult));

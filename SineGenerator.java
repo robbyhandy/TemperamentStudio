@@ -130,17 +130,19 @@ public class SineGenerator implements Runnable{
 			for(int i = 0; i < bufferSize; i++){
 				y = 0;
 				for(int j=0; j < notes.size(); j++){
+					double multiplier = 5.0 * KeyboardPanel.highnote / notes.get(j); 
 					phases.set(j,phases.get(j)+freqs.get(j)*dt);
 					if(phases.get(j)>1.0){
 						phases.set(j,phases.get(j)-1.0);
 					}
 					if(addHarmonics){
 						for(int h = 0; h < nHarmonics; h++){
-							y += harmonicamps[h]*fastSine(phases.get(j)*(h+1));//126*Math.sin(Math.PI*2*phases.get(j)*(h+1));//
+							multiplier = 5.0 * KeyboardPanel.highnote / (notes.get(j)*(h+1));
+							y += multiplier * harmonicamps[h]*fastSine(phases.get(j)*(h+1));//126*Math.sin(Math.PI*2*phases.get(j)*(h+1));//
 						}
 					}
 					else{
-						y += 100*fastSine(phases.get(j));//126*Math.sin(Math.PI*2*phases.get(j));//
+						y += multiplier * 100*fastSine(phases.get(j));//126*Math.sin(Math.PI*2*phases.get(j));//
 					}
 				}
 				// this divides out the 100 from the harmonic sliders, plus an exra factor of 8 to make it possible to play several notes with harmonics at once.
@@ -180,7 +182,6 @@ public class SineGenerator implements Runnable{
 				}
 
 			}
-
 			line.write(buffer,0,bufferSize);
 		}
 		return;

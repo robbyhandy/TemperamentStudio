@@ -159,6 +159,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 import java.awt.Desktop;
+import java.awt.TextField;
 
 import java.io.*;
 
@@ -1478,8 +1479,12 @@ public class TemperamentStudio extends JFrame {
 			mt.gridy = 2;
 			jManualTuningSliderPanel.add(jManualTuningSliderThreeX, mt);
 			
-//			jManualTuningSliderPanel.setPreferredSize(new Dimension(1000, 150));
-//			jManualTuningSliderPanel.setMinimumSize(new Dimension(1000, 150));
+			JPanel manualTuningButtonPanel = new JPanel();
+			manualTuningButtonPanel.setLayout(new BoxLayout(manualTuningButtonPanel,BoxLayout.Y_AXIS));
+
+			manualTuningButtonPanel.add(new ChangeSliderValsButton());
+			manualTuningButtonPanel.add(new ChangeSliderBoundsButton());
+			this.add(manualTuningButtonPanel);
 			
 			this.add(jManualTuningSliderPanel);
 			
@@ -2183,7 +2188,7 @@ public class TemperamentStudio extends JFrame {
 		// load the pitch shift values for each channel
 		int rootnote = jNotes.getSelectedIndex();
 		try{
-			pitchshift = tuningSchemes.getPitchShifts((String)jTunings.getSelectedItem(),2,rootnote,jTuningAdvancedPanel.getRootNote(), jTuningAdvancedPanel.getFrequency());
+			pitchshift = tuningSchemes.getPitchShifts((String)jTunings.getSelectedItem(),2,jNotes.getSelectedIndex(),jTuningAdvancedPanel.getRootNote(), jTuningAdvancedPanel.getFrequency());
 		} catch (Exception e){
 			displayerror(e.getMessage());
 		}
@@ -2247,29 +2252,8 @@ public class TemperamentStudio extends JFrame {
 		// C   C#  D   D#  E   F   F#   G   G#  A   A#   B
 		// [0] [1] [2] [3] [4] [5] [6] [7] [8] [9] [10] [11]
 		// [B] [B] [B] [ ] [M] [M] [M] [T] [T] [T] [  ] [  ]
-//		if (sliderNum == 1) {
-//			System.out.println("Adjusting pitches for channels 0, 1, 2");
-//			newPitchshift[0] = newPitchshiftAllChannels[0];
-//			newPitchshift[1] = newPitchshiftAllChannels[1];
-//			newPitchshift[2] = newPitchshiftAllChannels[2];
-//
-//		} else if (sliderNum == 2) {
-//			System.out.println("Adjusting pitches for channels 4, 5, 6");
-//			newPitchshift[4] = newPitchshiftAllChannels[4];
-//			newPitchshift[5] = newPitchshiftAllChannels[5];
-//			newPitchshift[6] = newPitchshiftAllChannels[6];
-//		} else if (sliderNum == 3) {
-//			System.out.println("Adjusting pitches for channels 7, 8, 9");
-//			newPitchshift[7] = newPitchshiftAllChannels[7];
-//			newPitchshift[8] = newPitchshiftAllChannels[8];
-//			newPitchshift[9] = newPitchshiftAllChannels[9];
-//		} else {
-//			System.out.println("Slider error");
-//		}
 		System.out.println("Adjusted pitches: " + Arrays.toString(newPitchshift));
 		currentPitchshift = newPitchshift.clone();
-//		kbPanel.setProgram(program);
-//		kbPanel.setPitchShifts(newPitchshift,rootnote);
 		changeLiveTuning();
 	}
 	/////////////////////////////////////////////////////////////////////////////////
@@ -2723,9 +2707,9 @@ public class TemperamentStudio extends JFrame {
 		
 		private void changeRatios() {
 			Double[] frequencies = tuningSchemes.getFrequencies(manualTuningName, jTuningAdvancedPanel.getRootNote(), jTuningAdvancedPanel.getFrequency());
-			manualTuningRatioMaj3.setRatioText(Math.log((frequencies[4]/frequencies[0])/(5.0/4))/Math.log(2));
-			manualTuningRatioMaj5.setRatioText(Math.log((frequencies[7]/frequencies[0])/(3.0/2))/Math.log(2));
-			manualTuningRatioMin3.setRatioText(Math.log((frequencies[7]/frequencies[4])/(6.0/5))/Math.log(2));
+			manualTuningRatioMaj3.setRatioText((3986.31 * Math.log10(frequencies[4]/frequencies[0])) - (386));
+			manualTuningRatioMaj5.setRatioText((3986.31 * Math.log10(frequencies[7]/frequencies[0])) - (702));
+			manualTuningRatioMin3.setRatioText((3986.31 * Math.log10(frequencies[7]/frequencies[4])) - (316));
 		}
 	}
 	
@@ -2744,6 +2728,112 @@ public class TemperamentStudio extends JFrame {
 		
 		public void setRatioText(double ratio) {
 			ratioLabel.setText(new DecimalFormat("#0.000000").format(ratio));
+		}
+	}
+
+	
+	public static class ChangeSliderValsButton extends JButton {
+		ChangeSliderValsButton() {
+			super();
+			setText("Change Slider Values");
+			this.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					catchKeyboard = false;
+					JTextField sliderOneVal = new JTextField(String.valueOf((double) jManualTuningSliderOne.getValue() / JToneSlider.toneMult), 5);
+					JTextField sliderTwoVal = new JTextField(String.valueOf((double) jManualTuningSliderTwo.getValue() / JToneSlider.toneMult), 5);
+					JTextField sliderThreeVal = new JTextField(String.valueOf((double) jManualTuningSliderThree.getValue() / JToneSlider.toneMult), 5);
+
+					JPanel myPanel = new JPanel();
+					JPanel sliderOnePanel = new JPanel();
+					sliderOnePanel.add(new JLabel("Slider One:"));
+					sliderOnePanel.add(sliderOneVal);
+					myPanel.add(sliderOnePanel);
+					JPanel sliderTwoPanel = new JPanel();
+					sliderTwoPanel.add(new JLabel("Slider Two:"));
+					sliderTwoPanel.add(sliderTwoVal);
+					myPanel.add(sliderTwoPanel);
+					JPanel sliderThreePanel = new JPanel();
+					sliderThreePanel.add(new JLabel("Slider Three:"));
+					sliderThreePanel.add(sliderThreeVal);
+					myPanel.add(sliderThreePanel);
+					
+					int result = JOptionPane.showConfirmDialog(null, myPanel, 
+							"Please Enter X and Y Values", JOptionPane.OK_CANCEL_OPTION);
+					if (result == JOptionPane.OK_OPTION) {
+						if(!sliderOneVal.getText().isEmpty())
+							jManualTuningSliderOne.setValue((int) (JToneSlider.toneMult * Double.valueOf(sliderOneVal.getText())));
+						if(!sliderTwoVal.getText().isEmpty())
+							jManualTuningSliderTwo.setValue((int) (JToneSlider.toneMult * Double.valueOf(sliderTwoVal.getText())));
+						if(!sliderThreeVal.getText().isEmpty())
+							jManualTuningSliderThree.setValue((int) (JToneSlider.toneMult * Double.valueOf(sliderThreeVal.getText())));
+					}
+					catchKeyboard = true;
+				}
+				
+			});
+		}
+	}
+	
+	public static class ChangeSliderBoundsButton extends JButton {
+		ChangeSliderBoundsButton() {
+			super();
+			setText("Change Slider Bounds");
+			this.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					catchKeyboard = false;
+					JTextField sliderOneMin = new JTextField(String.valueOf((double) jManualTuningSliderOne.getMinimum() / JToneSlider.toneMult), 5);
+					JTextField sliderOneMax = new JTextField(String.valueOf((double) jManualTuningSliderOne.getMaximum() / JToneSlider.toneMult), 5);
+					JTextField sliderTwoMin = new JTextField(String.valueOf((double) jManualTuningSliderTwo.getMinimum() / JToneSlider.toneMult), 5);
+					JTextField sliderTwoMax = new JTextField(String.valueOf((double) jManualTuningSliderTwo.getMaximum() / JToneSlider.toneMult), 5);
+					JTextField sliderThreeMin = new JTextField(String.valueOf((double) jManualTuningSliderThree.getMinimum() / JToneSlider.toneMult), 5);
+					JTextField sliderThreeMax = new JTextField(String.valueOf((double) jManualTuningSliderThree.getMaximum() / JToneSlider.toneMult), 5);
+
+
+					JPanel myPanel = new JPanel();
+					myPanel.setLayout(new BoxLayout(myPanel,BoxLayout.Y_AXIS));
+					JPanel sliderOnePanel = new JPanel();
+					sliderOnePanel.add(new JLabel("Slider One:"));
+					sliderOnePanel.add(sliderOneMin);
+					sliderOnePanel.add(new JLabel("to"));
+					sliderOnePanel.add(sliderOneMax);
+					myPanel.add(sliderOnePanel);
+					JPanel sliderTwoPanel = new JPanel();
+					sliderTwoPanel.add(new JLabel("Slider Two:"));
+					sliderTwoPanel.add(sliderTwoMin);
+					sliderTwoPanel.add(new JLabel("to"));
+					sliderTwoPanel.add(sliderTwoMax);
+					myPanel.add(sliderTwoPanel);
+					JPanel sliderThreePanel = new JPanel();
+					sliderThreePanel.add(new JLabel("Slider Three:"));
+					sliderThreePanel.add(sliderThreeMin);
+					sliderThreePanel.add(new JLabel("to"));
+					sliderThreePanel.add(sliderThreeMax);
+					myPanel.add(sliderThreePanel);
+					
+					int result = JOptionPane.showConfirmDialog(null, myPanel, 
+							"Please Enter X and Y Values", JOptionPane.OK_CANCEL_OPTION);
+					if (result == JOptionPane.OK_OPTION) {
+						if(!sliderOneMin.getText().isEmpty())
+							jManualTuningSliderOne.setMinimum((int) (JToneSlider.toneMult * Double.valueOf(sliderOneMin.getText())));
+						if(!sliderOneMax.getText().isEmpty())
+							jManualTuningSliderOne.setMaximum((int) (JToneSlider.toneMult * Double.valueOf(sliderOneMax.getText())));
+						if(!sliderTwoMin.getText().isEmpty())
+							jManualTuningSliderTwo.setMinimum((int) (JToneSlider.toneMult * Double.valueOf(sliderTwoMin.getText())));
+						if(!sliderTwoMax.getText().isEmpty())
+							jManualTuningSliderTwo.setMaximum((int) (JToneSlider.toneMult * Double.valueOf(sliderTwoMax.getText())));
+						if(!sliderThreeMin.getText().isEmpty())
+							jManualTuningSliderThree.setMinimum((int) (JToneSlider.toneMult * Double.valueOf(sliderThreeMin.getText())));
+						if(!sliderThreeMax.getText().isEmpty())
+							jManualTuningSliderThree.setMaximum((int) (JToneSlider.toneMult * Double.valueOf(sliderThreeMax.getText())));
+					}
+					catchKeyboard = true;
+				}
+				
+			});
 		}
 	}
 

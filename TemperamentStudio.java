@@ -132,6 +132,7 @@ import javax.sound.midi.Sequencer;
 import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MetaEventListener;
 import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Instrument;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
@@ -784,6 +785,15 @@ public class TemperamentStudio extends JFrame {
 		//kbPanel = new KeyboardPanel();
 		Synthesizer synth = MidiSystem.getSynthesizer();
 		synth.open();
+		try {
+			synth.unloadAllInstruments(synth.getDefaultSoundbank());
+			synth.loadAllInstruments(MidiSystem.getSoundbank(new File("jeux14.sf2")));
+		} catch (FileNotFoundException e) {
+			System.out.println("Could not load jeux14.sf2");
+			if(synth.getLoadedInstruments().length == 0) {
+				synth.loadAllInstruments(synth.getDefaultSoundbank());
+			}
+		}
 		kbPanel = new KeyboardPanel(synth, frame);
 
 //		manualTuningSuperPanel = new JPanel(new FlowLayout());

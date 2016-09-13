@@ -396,7 +396,7 @@ public class KeyboardPanel extends JPanel implements MouseListener {
 
 	// get a list of instruments the synthesizer can play
 	private void findPrograms(){
-		Instrument[] theinstruments = synth.getAvailableInstruments();
+		Instrument[] theinstruments = synth.getLoadedInstruments();
 		int i=0;
 		for(i=0; i < theinstruments.length; i++){
 			// Don't allow non general midi instrument numbers.

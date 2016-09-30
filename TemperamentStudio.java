@@ -2716,10 +2716,10 @@ public class TemperamentStudio extends JFrame {
 		}
 		
 		private void changeRatios() {
-			Double[] frequencies = tuningSchemes.getFrequencies(manualTuningName, jTuningAdvancedPanel.getRootNote(), jTuningAdvancedPanel.getFrequency());
-			manualTuningRatioMaj3.setRatioText((3986.31 * Math.log10(frequencies[4]/frequencies[0])) - (386));
-			manualTuningRatioMaj5.setRatioText((3986.31 * Math.log10(frequencies[7]/frequencies[0])) - (702));
-			manualTuningRatioMin3.setRatioText((3986.31 * Math.log10(frequencies[7]/frequencies[4])) - (316));
+			Double[] ratios = tuningSchemes.getRatios(manualTuningName);
+			manualTuningRatioMaj3.setRatioText((3986.31 * Math.log10(ratios[4]/ratios[0])) - (386.0));
+			manualTuningRatioMaj5.setRatioText((3986.31 * Math.log10(ratios[7]/ratios[0])) - (702.0));
+			manualTuningRatioMin3.setRatioText((3986.31 * Math.log10(ratios[7]/ratios[4])) - (316.0));
 		}
 	}
 	

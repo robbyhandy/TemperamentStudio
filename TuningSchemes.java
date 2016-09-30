@@ -88,8 +88,6 @@ public class TuningSchemes {
 		if(tuningi < 0) 
 			return;
 		Double[] data = ratios.get(tuningi);
-		System.out.println(x);
-		System.out.println("Something" + x);
 		if (sliderNum == 0) { // I believe these are the correct values for the channels
 			System.out.println("Adjusting pitches for channels 8, 9, 11");
 			data[7] = Math.pow(2, 7.0/12 + x/1200);
@@ -260,13 +258,9 @@ public class TuningSchemes {
 		// midi specs use a numerical value from (0 to 16383) with 8192 meaning no bend
 		Boolean messagesent = false;	
 		for(int nnote=0; nnote < 12; nnote++){
-			System.out.println("Ratio " +pitchratios[nnote]);
-//			System.out.println("Bend Range " + bendrange);
-//			System.out.println("nnote " + nnote);
 			// convert frequency ratio from file into a midi pitch shift parameter
 			pitchshift[nnote] = 8192+(int)(8191.0*((12.0*Math.log(pitchratios[nnote])/Math.log(2.0))-nnote)/bendrange);
 			if((pitchshift[nnote] < 0)||(pitchshift[nnote] > 16383)){
-				System.out.println("Shift " + pitchshift[nnote]);
 				pitchshift[nnote] = 0;
 				if(!messagesent){
 					Exception ex = new Exception("A pitch bend is out of range!  Your tuning is too extreme for this method.  Try using a tuning root closer to A440 or a tuning scheme closer to equal temperament.  Outputing garbage until you fix this.");
@@ -292,7 +286,6 @@ public class TuningSchemes {
 		int offset = tunerootoffset - pitchshift[tuneaboveroot];
 		for(int nnote = 0; nnote < 12; nnote++){
 			pitchshift[nnote] += offset;
-			System.out.println(pitchshift[nnote]);
 			if((pitchshift[nnote] < 0)||(pitchshift[nnote] > 16383)){
 				pitchshift[nnote] = 0;
 				//System.out.println("Note: "+Integer.toString(nnote)+"  Pitchshift: "+Integer.toString(pitchshift[nnote])+"   Offset: "+Integer.toString(offset));

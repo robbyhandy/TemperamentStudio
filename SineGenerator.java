@@ -31,7 +31,7 @@ public class SineGenerator implements Runnable{
 	private int overload = 0;
 	private int underrun = 0;
 	private final int flushval = 200;
-	private final int bits = 8;
+	private final int bits = 16;
 	private final int sleepTime = ((1000*bufferSize)/sampleRate)/4;
 	private SourceDataLine line;
 	private volatile ArrayList<Integer> notes;
@@ -48,7 +48,7 @@ public class SineGenerator implements Runnable{
 	private volatile int canChangeParams = 0;
 	private volatile int wantToChangeParams = 0;
 	private int eventNumber = 0;
-	private final int nSinePoints = 100;
+	private final int nSinePoints = 1000;
 	private static int[] sinePoints;
 
 	SineGenerator(){
@@ -130,14 +130,14 @@ public class SineGenerator implements Runnable{
 			for(int i = 0; i < bufferSize; i++){
 				y = 0;
 				for(int j=0; j < notes.size(); j++){
-					double multiplier = 6.0 * KeyboardPanel.highnote / notes.get(j); 
+					double multiplier = 1.0 * (KeyboardPanel.highnote - 12) / notes.get(j); 
 					phases.set(j,phases.get(j)+freqs.get(j)*dt);
 					if(phases.get(j)>1.0){
 						phases.set(j,phases.get(j)-1.0);
 					}
 					if(addHarmonics){
 						for(int h = 0; h < nHarmonics; h++){
-							multiplier = 6.0 * KeyboardPanel.highnote / (notes.get(j)*(h+1));
+							multiplier = 1.0 * KeyboardPanel.highnote / (notes.get(j)*(h+1));
 							y += multiplier * harmonicamps[h]*fastSine(phases.get(j)*(h+1));//126*Math.sin(Math.PI*2*phases.get(j)*(h+1));//
 						}
 					}
@@ -165,7 +165,6 @@ public class SineGenerator implements Runnable{
 				buffer[i] = (byte)y;
 			}
 			bufAvail = line.available();
-			//System.out.println(bufAvail);
 			if(bufAvail == 0){
 				underrun = overloadPersistance;
 				TemperamentStudio.underRunIndicator(true);
